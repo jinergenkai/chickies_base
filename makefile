@@ -5,35 +5,45 @@ SHELL := powershell.exe
 .SHELLFLAGS := -NoProfile -Command
 endif
 
+hello:
+	@echo "Hello! This works."
 
-
-
+#* Json to Model use QuickType
+# Define the directories containing the JSON and Dart files
 JSON_DIR := ./lib/data/json/
 MODEL_DIR := ./lib/data/model/
 
-JSON_FILES := $(wildcard $(JSON_DIR)*.json)
-DART_FILES := $(patsubst $(JSON_DIR)%.json,$(MODEL_DIR)%.dart,$(JSON_FILES))
-
-json_to_model:
-	quicktype --lang dart --src ./lib/data/json/account -o ./lib/data/model/account.dart
-# $(DART_FILES)
-# $(MODEL_DIR)%.dart: $(JSON_DIR)%.json
-# 	quicktype --lang dart --src $< -o $@
-
-# Mục tiêu để xóa các file Dart được tạo ra
-clean:
-	rm -f $(DART_FILES)
-
-talk:
-	@echo "Hello! This works."
-
-print_folders:
-	@$(MAKE) --no-print-directory list_folders
+JSON_FILES := $(wildcard $(JSON_DIR)*)
+DART_FILES := $(patsubst $(JSON_DIR)%,$(MODEL_DIR)%.dart,$(JSON_FILES))
 
 print:
-	Get-childitem -path ./lib/data/json | Select-Object -ExpandProperty Name | Out-File -FilePath ./lib/data/model.txt
+	@echo $(JSON_FILES)
+	@echo $(DART_FILES)
 
+json_to_model_errrror:
+	$(MODEL_FILES): $(JSON_FILES)
+		quicktype --lang dart --src $< -o $@
+
+clean_model:
+	if (Test-Path ./lib/data/model.txt) { Remove-Item ./lib/data/model.txt }
+	Remove-Item ./lib/data/model/*.dart
+	Remove-Item ./lib/data/model/*.g.dart
 
 json2model:
+	$(MAKE) clean_model 
 	Get-childitem -path ./lib/data/json | Select-Object -ExpandProperty Name | Out-File -FilePath ./lib/data/model.txt
 	foreach ($$line in Get-Content ./lib/data/model.txt) { quicktype --lang dart --src ./lib/data/json/$$line -o ./lib/data/model/$$line.dart}
+	@echo " *** Json to Model Success *** "
+
+#* Execute the app
+run:
+	flutter run
+
+#* Build the app
+
+build:
+	flutter build apk
+
+#* Clean the build
+clean:
+	flutter clean

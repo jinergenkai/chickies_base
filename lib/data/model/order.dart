@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final account2 = account2FromJson(jsonString);
+//     final order = orderFromJson(jsonString);
 
 import 'dart:convert';
 
-Account2 account2FromJson(String str) => Account2.fromJson(json.decode(str));
+Order orderFromJson(String str) => Order.fromJson(json.decode(str));
 
-String account2ToJson(Account2 data) => json.encode(data.toJson());
+String orderToJson(Order data) => json.encode(data.toJson());
 
-class Account2 {
+class Order {
     String orderId;
     Customer customer;
     List<Item> items;
     double total;
     String status;
 
-    Account2({
+    Order({
         required this.orderId,
         required this.customer,
         required this.items,
@@ -23,7 +23,7 @@ class Account2 {
         required this.status,
     });
 
-    factory Account2.fromJson(Map<String, dynamic> json) => Account2(
+    factory Order.fromJson(Map<String, dynamic> json) => Order(
         orderId: json["order_id"],
         customer: Customer.fromJson(json["customer"]),
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
