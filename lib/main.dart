@@ -1,7 +1,14 @@
-import 'package:chickies_ui/chickies_ui.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:data_table_2/data_table_2.dart';
+import 'package:floating_dialog/floating_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:chickies_ui/chickies_ui.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -14,25 +21,239 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: ChickiesColor.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      home: const TestNavigationRail(),
+    );
+  }
+}
+
+class TestNavigationRail extends StatefulWidget {
+  const TestNavigationRail({super.key});
+
+  @override
+  State<TestNavigationRail> createState() => _TestNavigationRailState();
+}
+
+class _TestNavigationRailState extends State<TestNavigationRail> {
+  int _index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          NavigationRail(
+            selectedIndex: _index,
+            onDestinationSelected: (int index) {
+              setState(() {
+                _index = index;
+              });
+            },
+            destinations: [
+              NavigationRailDestination(
+                icon: Icon(Icons.home),
+                label: Text("hOme"),
+              ),
+              NavigationRailDestination(
+                  icon: Icon(Icons.oil_barrel),
+                  label: MyHomePage(
+                    title: "123",
+                  )),
+            ],
+          ),
+          const VerticalDivider(
+            width: 1,
+            thickness: 1,
+          ),
+          if (_index == 0)
+            Expanded(
+              child: MeasurementScreen(),
+            )
+          else
+            Expanded(
+              child: MyHomePage(
+                title: "123",
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class MeasurementScreen extends StatefulWidget {
+  const MeasurementScreen({super.key});
+
+  @override
+  State<MeasurementScreen> createState() => _MeasurementScreenState();
+}
+
+class _MeasurementScreenState extends State<MeasurementScreen> {
+  @override
+  void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
+    super.initState();
+    initExitHandler();
+  }
+
+  void initExitHandler() {
+    FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      return await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(title: const Text('Bạn có muốn lưu và thoát không?'), backgroundColor: Colors.white, actions: [
+              ElevatedButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Có')),
+              ElevatedButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Không')),
+            ]);
+          });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Measurement Screen', style: TextStyle(color: Colors.white)),
+        toolbarHeight: 50,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Row(
+                children: [
+                  //measurements
+                  RoundedContainer(
+                    height: 150,
+                    width: 500,
+                    child: Center(child: Text("120.000", style: TextStyle(fontSize: 100, color: Colors.red, fontWeight: FontWeight.bold))),
+                  ),
+                  //action
+                  Expanded(
+                    child: Wrap(
+                      children: _actions,
+                    ),
+                  )
+                ],
+              ),
+              //*table data
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) => Container(
+                    alignment: Alignment.topLeft,
+                    // height: MediaQuery.of(context).size.height - 200,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: constraints.minWidth),
+                      child: DataTable2(
+                        border: TableBorder.all(color: ChickiesColor.grey, width: 1),
+                        columns: _headers,
+                        rows: _rows,
+                        minWidth: 1000,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (_showDialog)
+            FloatingDialog(
+                onDrag: (x, y) {
+                  print('x: $x, y: $y');
+                },
+                onClose: () {
+                  setState(() {
+                    _showDialog = false;
+                  });
+                },
+                child: const SizedBox(height: 200, width: 300, child: Align(alignment: Alignment.topCenter, child: Text('Dialog Title')))),
+        ],
+      ),
+    );
+  }
+
+  bool _showDialog = false;
+
+  List<Widget> get _actions {
+    //action function
+    List<Function> functions = [
+      () {},
+      () {},
+      () {
+        setState(() {
+          _showDialog = true;
+        });
+      },
+      () {},
+      () {},
+      () {},
+    ];
+    List<String> titles = [
+      'Xe+hàng',
+      'Xác xe',
+      'In Phiếu cân',
+      'Thêm mới',
+      'Lưu lại',
+      'Lịch sử',
+    ];
+    if (functions.length != titles.length) {
+      throw Exception("Length of functions, titles must be the same");
+    }
+    return List.generate(
+        functions.length,
+        (index) => Container(
+            // width: 100,
+            height: 50,
+            margin: EdgeInsets.all(5),
+            child: MaterialButton(
+              color: Theme.of(context).colorScheme.primary,
+              onPressed: functions[index] as void Function()?,
+              child: Text(
+                titles[index],
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            )));
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      Widget row = _actions.removeAt(oldIndex);
+      _actions.insert(newIndex, row);
+    });
+  }
+
+  List<DataColumn> get _headers {
+    const titles = [
+      'Mã',
+      'Tên khách hàng',
+      'Địa chỉ',
+      'Loại hàng',
+      'Biển số xe',
+      'TL xe hàng',
+      'TL xe',
+      'TL hàng',
+      'Ngày cân',
+      'Giờ cân xe',
+      'Giờ cân xác',
+      'Ghi chú',
+    ];
+    return List.generate(titles.length, (index) => DataColumn(label: Text(titles[index])));
+  }
+
+  List<DataRow> get _rows {
+    return List.generate(
+      20,
+      (rowIndex) => DataRow(
+        cells: List.generate(
+            12,
+            (colIndex) => DataCell(TextField(
+                  decoration: InputDecoration(border: InputBorder.none, hintText: "$rowIndex - $colIndex"),
+                ))),
+      ),
     );
   }
 }
@@ -40,7 +261,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -61,12 +281,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -83,7 +297,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ChickiesButton(onPressed: () {},),
             const Text(
               'You have pushed the button this many times:',
             ),
