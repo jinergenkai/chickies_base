@@ -227,21 +227,30 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   }
 
   List<DataColumn> get _headers {
-    const titles = [
-      'Mã',
-      'Tên khách hàng',
-      'Địa chỉ',
-      'Loại hàng',
-      'Biển số xe',
-      'TL xe hàng',
-      'TL xe',
-      'TL hàng',
-      'Ngày cân',
-      'Giờ cân xe',
-      'Giờ cân xác',
-      'Ghi chú',
+    const List<List<dynamic>> titles = [
+      ['Mã', 1],
+      ['Tên khách hàng', 2],
+      ['Địa chỉ', 1],
+      ['Loại hàng', 1],
+      ['Biển số xe', 1],
+      ['TL xe hàng', 1],
+      ['TL xe', 1],
+      ['TL hàng', 1],
+      ['Ngày cân', 1],
+      ['Giờ cân xe', 1],
+      ['Giờ cân xác', 1],
+      ['Ghi chú', 1],
     ];
-    return List.generate(titles.length, (index) => DataColumn(label: Text(titles[index])));
+    num sum = titles.fold(0, (previousValue, element) => previousValue + element[1]);
+    print(MediaQuery.of(context).size.width / sum * titles[1][1]);
+    return List.generate(
+        titles.length,
+        (index) => DataColumn2(
+            fixedWidth: (MediaQuery.of(context).size.width - 150) / sum * titles[index][1],
+            onSort: (index, ascending) {
+              print('index: $index, ascending: $ascending');
+            },
+            label: Container(width: 200, height: 200, color: Colors.red, child: Text(titles[index][0]))));
   }
 
   List<DataRow> get _rows {
