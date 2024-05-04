@@ -16,29 +16,29 @@ String logisticEntryToJson(LogisticEntry data) => json.encode(data.toJson());
 class LogisticEntry with _$LogisticEntry {
     const factory LogisticEntry({
         @JsonKey(name: "id")
-        int id,
+        required int id,
         @JsonKey(name: "customName")
-        String customName,
+        required String customName,
         @JsonKey(name: "address")
-        String address,
+        required String address,
         @JsonKey(name: "type")
-        String type,
+        required String type,
         @JsonKey(name: "licensePlate")
-        String licensePlate,
+        required String licensePlate,
         @JsonKey(name: "status")
-        String status,
+        required String status,
         @JsonKey(name: "cargoWeight")
-        String cargoWeight,
+        required String cargoWeight,
         @JsonKey(name: "VehicleWeight")
-        String vehicleWeight,
+        required String vehicleWeight,
         @JsonKey(name: "GoodsWeight")
-        String goodsWeight,
+        required String goodsWeight,
         @JsonKey(name: "vehicleWeighingDate")
-        DateTime vehicleWeighingDate,
+        required DateTime vehicleWeighingDate,
         @JsonKey(name: "verifiedWeighingDate")
-        DateTime verifiedWeighingDate,
+        required DateTime verifiedWeighingDate,
         @JsonKey(name: "VehicleWeighingImage")
-        String vehicleWeighingImage,
+        String? vehicleWeighingImage,
     }) = _LogisticEntry;
 
     factory LogisticEntry.fromJson(Map<String, dynamic> json) => _$LogisticEntryFromJson(json);

@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "customName": "Nguyen Hung",
+  "address": "Thang Quy Vu Bon",
+  "type": "Ngô",
+  "licensePlate": "47H 11034",
+  "status": "Đã cân xác",
+  "cargoWeight": "13000",
+      "VehicleWeight": "5000",
+          "GoodsWeight": "8000",
+              "vehicleWeighingDate": "2024-04-18T09:19:49.777635",
+              "verifiedWeighingDate": "2024-04-08T12:30:10.118655"
+}
