@@ -32,7 +32,8 @@ clean_model:
 json2model:
 	$(MAKE) clean_model 
 	Get-childitem -path ./lib/data/json | Select-Object -ExpandProperty Name | Out-File -FilePath ./lib/data/model.txt
-	foreach ($$line in Get-Content ./lib/data/model.txt) { quicktype --lang dart --src ./lib/data/json/$$line -o ./lib/data/model/$$line.dart}
+	foreach ($$line in Get-Content ./lib/data/model.txt) { quicktype --lang dart --src ./lib/data/json/$$line -o ./lib/data/model/$$line.dart --use-freezed --use-json-annotation --no-null-safety}
+	dart run build_runner build
 	@echo " *** Json to Model Success *** "
 
 #* Execute the app

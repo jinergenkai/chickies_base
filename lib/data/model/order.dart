@@ -2,124 +2,78 @@
 //
 //     final order = orderFromJson(jsonString);
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
+
+part 'order.freezed.dart';
+part 'order.g.dart';
 
 Order orderFromJson(String str) => Order.fromJson(json.decode(str));
 
 String orderToJson(Order data) => json.encode(data.toJson());
 
-class Order {
-    String orderId;
-    Customer customer;
-    List<Item> items;
-    double total;
-    String status;
+@freezed
+class Order with _$Order {
+    const factory Order({
+        @JsonKey(name: "order_id")
+        required String orderId,
+        @JsonKey(name: "customer")
+        required Customer customer,
+        @JsonKey(name: "items")
+        required List<Item> items,
+        @JsonKey(name: "total")
+        required double total,
+        @JsonKey(name: "status")
+        required String status,
+    }) = _Order;
 
-    Order({
-        required this.orderId,
-        required this.customer,
-        required this.items,
-        required this.total,
-        required this.status,
-    });
-
-    factory Order.fromJson(Map<String, dynamic> json) => Order(
-        orderId: json["order_id"],
-        customer: Customer.fromJson(json["customer"]),
-        items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-        total: json["total"]?.toDouble(),
-        status: json["status"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "order_id": orderId,
-        "customer": customer.toJson(),
-        "items": List<dynamic>.from(items.map((x) => x.toJson())),
-        "total": total,
-        "status": status,
-    };
+    factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 }
 
-class Customer {
-    String name;
-    String email;
-    Address address;
+@freezed
+class Customer with _$Customer {
+    const factory Customer({
+        @JsonKey(name: "name")
+        required String name,
+        @JsonKey(name: "email")
+        required String email,
+        @JsonKey(name: "address")
+        required Address address,
+    }) = _Customer;
 
-    Customer({
-        required this.name,
-        required this.email,
-        required this.address,
-    });
-
-    factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        name: json["name"],
-        email: json["email"],
-        address: Address.fromJson(json["address"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "name": name,
-        "email": email,
-        "address": address.toJson(),
-    };
+    factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
 }
 
-class Address {
-    String street;
-    String city;
-    String state;
-    String zipCode;
-    String country;
+@freezed
+class Address with _$Address {
+    const factory Address({
+        @JsonKey(name: "street")
+        required String street,
+        @JsonKey(name: "city")
+        required String city,
+        @JsonKey(name: "state")
+        required String state,
+        @JsonKey(name: "zip_code")
+        required String zipCode,
+        @JsonKey(name: "country")
+        required String country,
+    }) = _Address;
 
-    Address({
-        required this.street,
-        required this.city,
-        required this.state,
-        required this.zipCode,
-        required this.country,
-    });
-
-    factory Address.fromJson(Map<String, dynamic> json) => Address(
-        street: json["street"],
-        city: json["city"],
-        state: json["state"],
-        zipCode: json["zip_code"],
-        country: json["country"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "street": street,
-        "city": city,
-        "state": state,
-        "zip_code": zipCode,
-        "country": country,
-    };
+    factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
 }
 
-class Item {
-    String productId;
-    String name;
-    int quantity;
-    double price;
+@freezed
+class Item with _$Item {
+    const factory Item({
+        @JsonKey(name: "product_id")
+        required String productId,
+        @JsonKey(name: "name")
+        required String name,
+        @JsonKey(name: "quantity")
+        required int quantity,
+        @JsonKey(name: "price")
+        required double price,
+    }) = _Item;
 
-    Item({
-        required this.productId,
-        required this.name,
-        required this.quantity,
-        required this.price,
-    });
-
-    factory Item.fromJson(Map<String, dynamic> json) => Item(
-        productId: json["product_id"],
-        name: json["name"],
-        quantity: json["quantity"],
-        price: json["price"]?.toDouble(),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "product_id": productId,
-        "name": name,
-        "quantity": quantity,
-        "price": price,
-    };
+    factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }

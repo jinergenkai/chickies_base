@@ -6,6 +6,7 @@ import 'package:floating_dialog/floating_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:chickies_ui/chickies_ui.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
+import 'package:test_app/data/model/logistic_entry.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -242,6 +243,10 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
       ['Ghi chú', 1],
     ];
     num sum = titles.fold(0, (previousValue, element) => previousValue + element[1]);
+
+    LogisticEntry test = LogisticEntry();
+    // print(test.)
+
     print(MediaQuery.of(context).size.width / sum * titles[1][1]);
     return List.generate(
         titles.length,

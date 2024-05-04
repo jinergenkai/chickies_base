@@ -4,7 +4,11 @@
 //     final accountRequest = accountRequestFromJson(jsonString);
 //     final accountResponse = accountResponseFromJson(jsonString);
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
+
+part 'account.freezed.dart';
+part 'account.g.dart';
 
 AccountResponse accountFromJson(String str) => AccountResponse.fromJson(json.decode(str));
 
@@ -18,62 +22,34 @@ AccountResponse accountResponseFromJson(String str) => AccountResponse.fromJson(
 
 String accountResponseToJson(AccountResponse data) => json.encode(data.toJson());
 
-class AccountResponse {
-    String username;
-    String password;
-    String email;
-    String firstName;
-    String lastName;
-    DateTime birthDate;
-    int parentAccountId;
-    String role;
-    String mylove;
-    String? address;
-    String? response;
-    String? request;
+@freezed
+class AccountResponse with _$AccountResponse {
+    const factory AccountResponse({
+        @JsonKey(name: "username")
+        required String username,
+        @JsonKey(name: "password")
+        required String password,
+        @JsonKey(name: "email")
+        required String email,
+        @JsonKey(name: "firstName")
+        required String firstName,
+        @JsonKey(name: "lastName")
+        required String lastName,
+        @JsonKey(name: "birthDate")
+        required DateTime birthDate,
+        @JsonKey(name: "parentAccountId")
+        required int parentAccountId,
+        @JsonKey(name: "role")
+        required String role,
+        @JsonKey(name: "mylove")
+        required String mylove,
+        @JsonKey(name: "address")
+        String? address,
+        @JsonKey(name: "response")
+        String? response,
+        @JsonKey(name: "request")
+        String? request,
+    }) = _AccountResponse;
 
-    AccountResponse({
-        required this.username,
-        required this.password,
-        required this.email,
-        required this.firstName,
-        required this.lastName,
-        required this.birthDate,
-        required this.parentAccountId,
-        required this.role,
-        required this.mylove,
-        this.address,
-        this.response,
-        this.request,
-    });
-
-    factory AccountResponse.fromJson(Map<String, dynamic> json) => AccountResponse(
-        username: json["username"],
-        password: json["password"],
-        email: json["email"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-        birthDate: DateTime.parse(json["birthDate"]),
-        parentAccountId: json["parentAccountId"],
-        role: json["role"],
-        mylove: json["mylove"],
-        address: json["address"],
-        response: json["response"],
-        request: json["request"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "username": username,
-        "password": password,
-        "email": email,
-        "firstName": firstName,
-        "lastName": lastName,
-        "birthDate": "${birthDate.year.toString().padLeft(4, '0')}-${birthDate.month.toString().padLeft(2, '0')}-${birthDate.day.toString().padLeft(2, '0')}",
-        "parentAccountId": parentAccountId,
-        "role": role,
-        "mylove": mylove,
-        "address": address,
-        "response": response,
-        "request": request,
-    };
+    factory AccountResponse.fromJson(Map<String, dynamic> json) => _$AccountResponseFromJson(json);
 }
