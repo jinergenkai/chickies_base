@@ -23,6 +23,10 @@ dependencies:
   build_runner: ^2.4.9
   json_annotation: ^4.9.0
   json_serializable: ^6.8.0
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  fluent_ui: ^1.2.3
+  postgres: ^3.2.0
 
 
 dev_dependencies:

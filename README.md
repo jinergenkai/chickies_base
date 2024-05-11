@@ -15,6 +15,9 @@ This project is a base project for a Flutter application.
   quicktype --lang dart --src ./lib/data/json/account -o ./lib/data/model/account.dart
   ```
 
+  - future
+    - change the manner of generate multiple model.
+
 ## Makefile
   - If error in Windows - Allow policy, open terminal as administrator
   ```
